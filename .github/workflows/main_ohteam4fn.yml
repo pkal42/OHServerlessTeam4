@@ -32,11 +32,20 @@ jobs:
           dotnet build --configuration Release --output ./output
           popd
 
-      - name: 'Run Azure Functions Action'
+      # - name: 'Run Azure Functions Action - Production'
+      #   uses: Azure/functions-action@v1
+      #   id: faproduction
+      #   with:
+      #     app-name: 'ohteam4fn'
+      #     slot-name: 'ohteam4fn-ohteam4fn-staging'
+      #     package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+      #     publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_060F1375D4474EA093BD1B0414C2BC80 }}
+
+      - name: 'Run Azure Functions Action - Staging'
         uses: Azure/functions-action@v1
-        id: fa
+        id: fastaging
         with:
           app-name: 'ohteam4fn'
           slot-name: 'ohteam4fn-ohteam4fn-staging'
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_060F1375D4474EA093BD1B0414C2BC80 }}
+          publish-profile: ${{ secrets.OHTEAM4FNAPP_STAGING }}
