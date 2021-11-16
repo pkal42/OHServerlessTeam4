@@ -10,11 +10,12 @@ on:
   pull_request:
     branches: [ main ]
     paths-ignore: [ .github/** ] 
+  workflow_dispatch:
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '3.1' # set this to the dotnet version to use
-  PRODUCTION_SLOT: false
+  PRODUCTION_SLOT: true
 
 jobs:
   build-and-deploy:
