@@ -37,6 +37,6 @@ jobs:
         id: fa
         with:
           app-name: 'ohteam4fn'
-          slot-name: 'Production'
+          slot-name: 'ohteam4fn-ohteam4fn-staging'
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_060F1375D4474EA093BD1B0414C2BC80 }}
