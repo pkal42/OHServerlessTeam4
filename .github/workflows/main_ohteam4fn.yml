@@ -5,13 +5,16 @@ name: Build and deploy dotnet core app to Azure Function App - ohteam4fn
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
+    paths-ignore: [ .github/** ]
+  pull_request:
+    branches: [ main ]
+    paths-ignore: [ .github/** ] 
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '3.1' # set this to the dotnet version to use
+  PRODUCTION_SLOT: false
 
 jobs:
   build-and-deploy:
@@ -32,16 +35,18 @@ jobs:
           dotnet build --configuration Release --output ./output
           popd
 
-      # - name: 'Run Azure Functions Action - Production'
-      #   uses: Azure/functions-action@v1
-      #   id: faproduction
-      #   with:
-      #     app-name: 'ohteam4fn'
-      #     slot-name: 'production'
-      #     package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-      #     publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_060F1375D4474EA093BD1B0414C2BC80 }}
+      - name: 'Run Azure Functions Action - Production'
+        if: ${{ env.PRODUCTION_SLOT == true }}
+        uses: Azure/functions-action@v1
+        id: faproduction
+        with:
+          app-name: 'ohteam4fn'
+          slot-name: 'production'
+          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_060F1375D4474EA093BD1B0414C2BC80 }}
 
       - name: 'Run Azure Functions Action - Staging'
+        if: ${{ env.PRODUCTION_SLOT == false }}
         uses: Azure/functions-action@v1
         id: fastaging
         with:
