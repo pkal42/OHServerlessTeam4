@@ -11,14 +11,19 @@ using Newtonsoft.Json;
 
 namespace OpenHack
 {
-    public  class Ratings
+    public  class Rating
     {
-        [JsonProperty(PropertyName="id")]
+        
+        [JsonProperty("id")]
+        public Guid RatingId { get; set;}
         public Guid UserId { get; set; }
         public Guid ProductId { get; set; }
         public DateTime TimeStamp { get; set; }
         public string LocationName { get; set; }
-        public int Rating { get; set; }
+        
+        [JsonProperty("rating")]
+        public int RatingScore { get; set; }
+
         public string UserNotes { get; set;}
 
     }
