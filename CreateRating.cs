@@ -16,7 +16,7 @@ namespace OpenHack
         private static readonly HttpClient client = new HttpClient();
         [FunctionName("CreateRating")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "ratings/")] HttpRequest req,
             [CosmosDB(
                 databaseName: "bfyoc",
                 collectionName: "ratings",
@@ -34,7 +34,7 @@ namespace OpenHack
             }
             catch
             {
-                return new BadRequestObjectResult("Invalid rating object.");
+                return new BadRequestObjectResult("Bad request");
             }
 
             string responseMessage = string.Empty;
@@ -71,7 +71,8 @@ namespace OpenHack
             }
             if (invalidRequest)
             {
-                return new BadRequestObjectResult(responseMessage);
+                log.LogInformation(responseMessage);
+                return new NotFoundObjectResult(responseMessage);
             }
             else
             {
