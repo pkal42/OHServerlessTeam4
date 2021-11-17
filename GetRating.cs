@@ -16,18 +16,18 @@ namespace OpenHack
     {
         [FunctionName("GetRating")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "ratings/{ratingId}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "rating/{ratingId}")] HttpRequest req,
             [CosmosDB(
                 databaseName: "bfyoc",
                 collectionName: "ratings",
                 ConnectionStringSetting = "CosmosDBConnection",
                 SqlQuery = "select * from c where c.id = {ratingId}"
-            )] IEnumerable<Ratings> ratings,
+            )] IEnumerable<Rating> ratings,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function received a GetRating request.");
             
-            foreach (Ratings rating in ratings)
+            foreach (Rating rating in ratings)
             {
                 log.LogInformation(JsonConvert.SerializeObject(rating).ToString());
                 return new OkObjectResult(rating);
