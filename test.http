@@ -1,0 +1,19 @@
+
+POST https://ohteam4fn.azurewebsites.net/api/ratings HTTP/1.1
+content-type: application/json
+
+{
+  "userId": "cc20a6fb-a91f-4192-874d-132493685376",
+  "productId": "4c25613a-a3c2-4ef3-8e02-9c335eb23204",
+  "locationName": "Sample ice cream shop",
+  "rating": 5,
+  "userNotes": "I love the subtle notes of orange in this ice cream!"
+}
+
+###
+GET https://ohteam4fn.azurewebsites.net/api/rating/79c2779e-dd2e-43e8-803d-ecbebed8972c HTTP/1.1
+content-type: application/json
+
+###
+GET https://ohteam4fn.azurewebsites.net/api/ratings/cc20a6fb-a91f-4192-874d-132493685376 HTTP/1.1
+content-type: application/json
