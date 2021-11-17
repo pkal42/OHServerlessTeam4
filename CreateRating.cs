@@ -14,22 +14,28 @@ namespace OpenHack
     {
         [FunctionName("CreateRating")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
+            [CosmosDB(
+                databaseName: "bfyoc",
+                collectionName: "ratings",
+                ConnectionStringSetting = "CosmosDBConnection")] IAsyncCollector<Rating> ratingsout,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("C# HTTP trigger function received a create rating request.");
 
-            string name = req.Query["name"];
+            string reqBody = await new StreamReader(req.Body).ReadToEndAsync();
+            Rating rating = JsonConvert.DeserializeObject<Rating>(reqBody);
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            if (rating.RatingScore >=0 && rating.RatingScore <=5) {
+               rating.RatingId = Guid.NewGuid();
+               rating.TimeStamp = DateTime.Now;
+            
+               await ratingsout.AddAsync(rating);
+            
+                return new CreatedResult("/rating", rating);
+            }
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
+            return new BadRequestResult();
         }
     }
 }
