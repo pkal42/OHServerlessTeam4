@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenHack
 {
@@ -26,7 +27,14 @@ namespace OpenHack
         {
             log.LogInformation("C# HTTP trigger function received a GetRatings request.");
             
-            return new OkObjectResult(ratings);
+            if(ratings.Count() > 0) 
+            {
+                return new OkObjectResult(ratings);
+            } 
+            else 
+            {
+                return new NotFoundResult();
+            }                        
         }
     }
 }
