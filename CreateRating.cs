@@ -27,10 +27,19 @@ namespace OpenHack
 
             bool invalidRequest = false;
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            Rating rating = JsonConvert.DeserializeObject<Rating>(requestBody);
-            string responseMessage = string.Empty;            
-            
-                       
+            Rating rating;
+            try
+            {
+                rating = JsonConvert.DeserializeObject<Rating>(requestBody);
+            }
+            catch
+            {
+                return new BadRequestObjectResult("Invalid rating object.");
+            }
+
+            string responseMessage = string.Empty;
+
+
             HttpResponseMessage response = await client.GetAsync($"https://serverlessohapi.azurewebsites.net/api/GetUser?userId={rating.UserId}");
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -46,8 +55,9 @@ namespace OpenHack
                     invalidRequest = true;
                     responseMessage = $"Product '{rating.ProductId}' is invalid.";
                 }
-                else{     
-                    log.LogInformation($"Product '{rating.ProductId}' is valid.");                           
+                else
+                {
+                    log.LogInformation($"Product '{rating.ProductId}' is valid.");
                     if (rating.RatingScore < 0 || rating.RatingScore > 5)
                     {
                         invalidRequest = true;
@@ -58,12 +68,13 @@ namespace OpenHack
 
                     await ratingsout.AddAsync(rating);
                 }
-            }           
+            }
             if (invalidRequest)
             {
                 return new BadRequestObjectResult(responseMessage);
             }
-            else {
+            else
+            {
                 return new CreatedResult("/rating", rating);
             }
         }
