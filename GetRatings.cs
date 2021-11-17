@@ -16,7 +16,7 @@ namespace OpenHack
     {
         [FunctionName("GetRatings")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "ratings/{userId}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "ratings/{userId}")] HttpRequest req,
             [CosmosDB(
                 databaseName: "bfyoc",
                 collectionName: "ratings",
