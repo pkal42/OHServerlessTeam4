@@ -37,7 +37,7 @@ jobs:
           popd
 
       - name: 'Run Azure Functions Action - Production'
-        if: ${{ env.PRODUCTION_SLOT == 'production' }}
+        if: ${{ env.SLOT == 'production' }}
         uses: Azure/functions-action@v1
         id: faproduction
         with:
@@ -47,7 +47,7 @@ jobs:
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_060F1375D4474EA093BD1B0414C2BC80 }}
 
       - name: 'Run Azure Functions Action - Staging'
-        if: ${{ !env.PRODUCTION_SLOT == 'production' }}
+        if: ${{ env.SLOT != 'production' }}
         uses: Azure/functions-action@v1
         id: fastaging
         with:
